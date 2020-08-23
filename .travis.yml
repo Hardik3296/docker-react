@@ -1,0 +1,12 @@
+# Whenever running dicker we require super user permissions
+sudo: required
+language: generic
+# Telling Travis CI what needs to be pre installed
+services:
+    - docker
+# Steps to take place before the tests are run
+before_install:
+    - docker build -t hardik3296/docker-react -f Dockerfile.dev .
+# Series of commands to be executed when running the tests
+script:
+    - docker run -e ($env:CI = "true") hardik3296/docker-react npm run test -- --coverage

@@ -1,17 +1,27 @@
+# Defining the docker-compose version being used
 version: "3"
+# Defining the different container configurtions to run
 services: 
+    # Name of the first service
     web:
         stdin_open: true
+        # For live changes deployment to server inside the container when change is made on source code
         environment:
             - CHOKIDAR_USEPOLLING=true
+        # Providing the file to be used for building the container
         build: 
             context: .
             dockerfile: Dockerfile.dev
+        # Linking the port of the local host with that of the port of the docker container
         ports: 
             - "3000:3000"
+        # First one is to define the folder not to be changed at any cost
+        # Second one is to create reference of the folder inside the container to the folder on the
+        # host machine 
         volumes: 
             - /app/node_modules
             - .:/app
+    # Name of the second service for running the tests
     tests:
         stdin_open: true
         environment:
@@ -22,4 +32,5 @@ services:
         volumes: 
             - /app/node_modules
             - .:/app
+        # Overriding the default command to be run on startup
         command: ["npm","run","test"]
